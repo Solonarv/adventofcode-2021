@@ -1,4 +1,11 @@
-module Util where
+module Util
+  ( module Util
+  , module Control.Applicative
+  , module Control.Monad
+  , module Data.Foldable
+  , module Data.Maybe
+  , module Data.Monoid
+  ) where
 
 import Control.Applicative
 import Control.Monad
