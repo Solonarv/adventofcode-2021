@@ -211,3 +211,6 @@ bitsToBinary = go zeroBits
 
 löb :: Functor f => f (f a -> a) -> f a
 löb ffs = out where out = fmap ($ out) ffs
+
+findFirstWith :: Foldable t => (a -> Maybe b) -> t a -> Maybe b
+findFirstWith p = foldr (\x r -> p x <|> r) Nothing

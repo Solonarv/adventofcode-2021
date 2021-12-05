@@ -69,3 +69,10 @@ showCharGrid f (Grid2D w h grid) = unlines
     ]
   | y <- [0 .. h-1]
   ]
+
+rows :: Grid2D a -> Vector (Vector a)
+rows (Grid2D w h v) = Vector.generate h \y -> Vector.slice (y*w) w v
+
+cols :: Grid2D a -> Vector (Vector a)
+cols (Grid2D w h v) = Vector.generate w \x -> Vector.generate h \y ->
+  v Vector.! (y*w + x)
