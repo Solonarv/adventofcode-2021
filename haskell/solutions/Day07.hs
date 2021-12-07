@@ -19,7 +19,7 @@ solution = Solution
     { solve = Just . linFuelRequired
     }
   , solveB = defSolver
-    { solve = Just . squareFuelRequiredBruteForce
+    { solve = Just . squareFuelRequired -- BruteForce
     }
   , tests =
     [ "16,1,2,0,4,2,7,1,2,14"
@@ -42,12 +42,16 @@ median vec = runST do
   Radix.sort mvec
   MVector.read mvec (MVector.length mvec `div` 2)
 
--- | Value of the error term minimized by the average.
+-- | Value of the error term minimized by the average±1.
 squareFuelRequired :: Vector Int -> Int
-squareFuelRequired xs = Vector.sum (Vector.map dist xs)
+squareFuelRequired xs = minimum $ map Vector.sum
+  [ Vector.map (dist (avg-1)) xs
+  , Vector.map (dist avg) xs
+  , Vector.map (dist (avg+1)) xs
+  ]
   where
     avg = average xs
-    dist x = let !d = abs (x-avg) in d*(d+1) `div` 2
+    dist a x = let !d = abs (x-a) in d*(d+1) `div` 2
 
 -- what the fuck
 squareFuelRequiredBruteForce :: Vector Int -> Int
