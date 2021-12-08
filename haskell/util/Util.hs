@@ -214,3 +214,9 @@ löb ffs = out where out = fmap ($ out) ffs
 
 findFirstWith :: Foldable t => (a -> Maybe b) -> t a -> Maybe b
 findFirstWith p = foldr (\x r -> p x <|> r) Nothing
+
+fromDigits :: Int -> [Int] -> Int
+fromDigits b = foldl' (\r d -> r*b + d) 0
+
+guarding :: Alternative f => (a -> Bool) -> a -> f a
+guarding p x = x <$ guard (p x)
