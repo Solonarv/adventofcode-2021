@@ -20,6 +20,19 @@ type instance IxValue (Grid2D a) = a
 instance Ixed (Grid2D a) where
   ix (x,y) = gridPoint x y
 
+instance FunctorWithIndex (Int, Int) Grid2D where
+  imap = iover itraversed
+
+instance FoldableWithIndex (Int, Int) Grid2D where
+  ifoldMap = ifoldMapOf itraversed
+  ifoldr = ifoldrOf itraversed
+
+instance TraversableWithIndex (Int, Int) Grid2D where
+  itraverse f (Grid2D w h vec) = Grid2D w h <$> itraverseVec (f . unflatten) vec
+    where
+      unflatten = swap . (`divMod` w)
+      itraverseVec = itraverseOf (indexing traversed)
+
 gridPoint :: Int -> Int -> Traversal' (Grid2D a) a
 gridPoint x y f g@(Grid2D w h vec)
   | x >= w || y >= h || x < 0 || y < 0
@@ -46,6 +59,14 @@ adjacents x y grid = mapMaybe (grid ^?)
   | dx <- [-1, 0, 1]
   , dy <- [-1, 0, 1]
   , dx /= 0 || dy /= 0
+  ]
+
+adjacentsNeumann :: Int -> Int -> Grid2D a -> [a]
+adjacentsNeumann x y grid = catMaybes
+  [ grid ^? gridPoint (x-1) y
+  , grid ^? gridPoint (x+1) y
+  , grid ^? gridPoint x (y-1)
+  , grid ^? gridPoint x (y+1)
   ]
 
 ray :: Int -> Int -> Int -> Int -> Grid2D a -> [a]

@@ -7,7 +7,7 @@ module Util
   , module Data.Monoid
   ) where
 
-import Control.Applicative hiding (many)
+import Control.Applicative hiding (some, many)
 import Control.Monad
 import Control.Monad.ST
 import Data.Bits
